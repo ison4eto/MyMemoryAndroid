@@ -2,17 +2,22 @@ package com.iskratrifonova.mymemorygame
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.iskratrifonova.mymemorygame.models.BoardSize
-import com.iskratrifonova.mymemorygame.utils.DEFAULT_ICONS
+import com.iskratrifonova.mymemorygame.models.MemoryGame
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var  rvBoard: RecyclerView
-    private lateinit var  tvNumMoves: TextView
-    private lateinit var  tvNumPairs: TextView
+    companion object {
+        private const val TAG = "MainActivity"
+    }
+
+    private lateinit var rvBoard: RecyclerView
+    private lateinit var tvNumMoves: TextView
+    private lateinit var tvNumPairs: TextView
 
     private var boardSize: BoardSize = BoardSize.HARD
 
@@ -24,10 +29,14 @@ class MainActivity : AppCompatActivity() {
         tvNumMoves = findViewById(R.id.tvNumMoves)
         tvNumPairs = findViewById(R.id.tvNumPairs)
 
-        val chosenImages = DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs());
-        val randomizedImages = (chosenImages + chosenImages).shuffled()
+        val memoryGame = MemoryGame(boardSize)
 
-        rvBoard.adapter = MemoryBoardAdapter(this, boardSize, randomizedImages)
+        rvBoard.adapter = MemoryBoardAdapter(this, boardSize, memoryGame.cards, object: MemoryBoardAdapter.CardClickListener {
+            override fun onCardClicked(position: Int) {
+                Log.i(TAG, "Card clicked $position")
+            }
+
+        })
         rvBoard.setHasFixedSize(true)
         rvBoard.layoutManager = GridLayoutManager(this, boardSize.getWidth())
     }
