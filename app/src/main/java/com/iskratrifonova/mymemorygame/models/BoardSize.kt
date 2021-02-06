@@ -20,4 +20,11 @@ enum class BoardSize(val numCards: Int) {
     fun getNumPairs(): Int {
         return numCards / 2
     }
+
+    fun getInitialMovesText(boardSize: BoardSize): String {
+        return "${getCapitalizedText(boardSize)}: ${boardSize.getWidth()} x ${boardSize.getHeight()}"
+    }
+    private fun getCapitalizedText(boardSize: BoardSize): String {
+        return boardSize.toString().toLowerCase().capitalize();
+    }
 }
